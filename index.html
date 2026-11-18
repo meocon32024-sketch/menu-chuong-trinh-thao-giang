@@ -10,302 +10,229 @@
     <style>
         body {
             font-family: 'Be Vietnam Pro', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            /* Nền màu sắc tươi vui, trẻ trung: Chuyển sắc từ xanh nhạt sang trắng và tím nhạt */
+            background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #f3e8ff 100%);
             min-height: 100vh;
-            color: #f8fafc;
-            /* Chống bôi đen và kéo thả văn bản/hình ảnh */
+            color: #1e293b;
+            /* Chống bôi đen và kéo thả */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            background-attachment: fixed;
         }
-        /* Cho phép chọn và dán chữ bình thường bên trong các ô nhập liệu Cài đặt */
+        /* Cho phép chọn và dán chữ bình thường bên trong các ô nhập liệu */
         input, textarea {
             -webkit-user-select: text !important;
             -moz-user-select: text !important;
             -ms-user-select: text !important;
             user-select: text !important;
         }
+        /* Hiệu ứng thẻ kính sáng màu */
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .glass-card:hover {
-            transform: translateY(-6px);
-            background: rgba(255, 255, 255, 0.09);
-            border-color: rgba(56, 189, 248, 0.5);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.2);
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 20px 30px -5px rgba(56, 189, 248, 0.15), 0 10px 15px -5px rgba(168, 85, 247, 0.1);
         }
         .badge-glow {
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
     </style>
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;" class="flex flex-col justify-between p-6 md:p-10">
 
-    <!-- Thông báo cảnh báo khi có người cố tình sao chép -->
-    <div id="protect-toast" class="fixed bottom-6 right-6 bg-rose-600/95 text-white px-4 py-3 rounded-xl shadow-2xl border border-rose-400/50 flex items-center gap-2.5 text-sm font-semibold transform translate-y-24 opacity-0 transition-all duration-300 z-[100] pointer-events-none">
-        <i data-lucide="shield-alert" class="w-5 h-5 text-amber-300"></i>
-        <span>Nội dung được bảo vệ bản quyền giảng dạy!</span>
+    <!-- Cảnh báo bản quyền -->
+    <div id="protect-toast" class="fixed bottom-6 right-6 bg-rose-500/95 text-white px-5 py-3 rounded-xl shadow-2xl border border-rose-400 flex items-center gap-2.5 text-sm font-bold transform translate-y-24 opacity-0 transition-all duration-300 z-[100] pointer-events-none">
+        <i data-lucide="shield-alert" class="w-5 h-5 text-rose-200"></i>
+        <span>Nội dung được bảo vệ bản quyền!</span>
     </div>
 
     <!-- Thanh công cụ trên cùng -->
-    <header class="max-w-7xl w-full mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-700/70 pb-6">
+    <header class="max-w-7xl w-full mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200/80 pb-6">
         <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/30 text-sky-300 text-sm font-semibold mb-3 badge-glow">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-100 border border-sky-300 text-sky-700 text-sm font-bold mb-3 badge-glow">
                 <i data-lucide="award" class="w-4 h-4"></i>
                 <span id="display-school">TRƯỜNG THPT NGUYỄN THÁI BÌNH • TIẾT THAO GIẢNG</span>
             </div>
-            <h1 id="display-lesson" class="text-2xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
+            <h1 id="display-lesson" class="text-2xl md:text-4xl font-extrabold tracking-tight text-slate-800 leading-tight">
                 CHỦ ĐỀ: ỨNG DỤNG TOÁN HỌC & CÔNG NGHỆ TRONG THỰC TIỄN
             </h1>
-            <p id="display-teacher" class="text-slate-300 mt-2 text-base md:text-lg font-medium flex items-center gap-2">
-                <i data-lucide="user-check" class="w-5 h-5 text-emerald-400"></i>
+            <p id="display-teacher" class="text-slate-600 mt-2 text-base md:text-lg font-semibold flex items-center gap-2">
+                <i data-lucide="user-check" class="w-5 h-5 text-emerald-500"></i>
                 <span>Giáo viên thực hiện: Thầy Mai Đức Thắng • Lớp: 11B2</span>
             </p>
         </div>
 
-        <!-- Cụm Đồng hồ Hệ thống PC & Nút Cài đặt -->
+        <!-- Cụm Đồng hồ & Cài đặt -->
         <div class="flex items-center gap-3 self-end lg:self-center">
-            <div class="flex items-center gap-3 bg-slate-800/90 border border-slate-700/80 px-4 py-2 rounded-xl shadow-inner" title="Đồng bộ theo giờ hệ thống của máy tính">
-                <div class="p-2 rounded-lg bg-sky-500/15 text-sky-400">
+            <div class="flex items-center gap-3 bg-white/80 backdrop-blur-sm border border-slate-200 px-4 py-2 rounded-2xl shadow-sm" title="Đồng hồ hệ thống">
+                <div class="p-2 rounded-xl bg-sky-100 text-sky-600">
                     <i data-lucide="clock" class="w-5 h-5"></i>
                 </div>
                 <div class="text-right">
-                    <div id="live-clock" class="font-mono text-xl font-extrabold text-white tracking-wider leading-none">
+                    <div id="live-clock" class="font-mono text-xl font-extrabold text-slate-800 tracking-wider leading-none">
                         00:00:00
                     </div>
-                    <div id="live-date" class="text-[11px] font-medium text-slate-400 mt-1">
-                        Đang đồng bộ ngày...
+                    <div id="live-date" class="text-[11px] font-bold text-slate-500 mt-1">
+                        Đang đồng bộ...
                     </div>
                 </div>
             </div>
 
-            <button onclick="toggleEditModal()" class="flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white px-4 py-3 rounded-xl font-semibold shadow-lg transition cursor-pointer" title="Dán link và sửa nội dung">
+            <button onclick="toggleEditModal()" class="flex items-center gap-2 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white px-5 py-3 rounded-2xl font-bold shadow-lg shadow-sky-200 transition-all hover:scale-105 cursor-pointer">
                 <i data-lucide="settings" class="w-5 h-5"></i>
-                <span>Cài đặt Link</span>
+                <span>Cấu hình Link</span>
             </button>
         </div>
     </header>
 
-    <!-- Khu vực chính: Lưới các hoạt động dạy học -->
+    <!-- Khu vực chính -->
     <main class="max-w-7xl w-full mx-auto my-8">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                <i data-lucide="layout-grid" class="w-5 h-5 text-sky-400"></i>
-                Tiến trình hoạt động bài dạy (Nhấp vào thẻ hoặc bấm phím 1 - 6 để mở)
+            <h2 class="text-lg font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-500"></i>
+                Tiến trình hoạt động bài dạy (Nhấp chuột hoặc bấm phím 1 - 6)
             </h2>
-            <span class="text-xs text-slate-400 hidden md:inline">Mẹo: Bấm F11 để trình chiếu toàn màn hình</span>
+            <span class="text-xs font-semibold text-slate-500 bg-white/50 px-3 py-1 rounded-full shadow-sm hidden md:inline">
+                Mẹo: Bấm F11 để trình chiếu toàn màn hình
+            </span>
         </div>
 
         <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
     <!-- Chân trang -->
-    <footer class="max-w-7xl w-full mx-auto border-t border-slate-800 pt-4 flex flex-col sm:flex-row justify-between items-center text-slate-400 text-sm gap-2">
+    <footer class="max-w-7xl w-full mx-auto border-t border-slate-300/50 pt-4 flex flex-col sm:flex-row justify-between items-center text-slate-500 text-sm gap-2 font-medium">
         <p class="flex items-center gap-1.5">
-            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
-            <span>Bảng điều khiển bài giảng tương tác • Bản quyền thuộc về tác giả</span>
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+            <span>Bảng điều khiển bài giảng tương tác</span>
         </p>
         <div class="flex items-center gap-4">
-            <button onclick="resetDefaultData()" class="hover:text-rose-400 transition underline cursor-pointer">Khôi phục mẫu mặc định</button>
+            <button onclick="resetDefaultData()" class="hover:text-rose-500 transition underline cursor-pointer">Khôi phục mẫu mặc định</button>
         </div>
     </footer>
 
-    <!-- Modal Cài đặt / Dán Link -->
-    <div id="edit-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-6 md:p-8 shadow-2xl my-8">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-4 mb-6">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i data-lucide="link" class="w-6 h-6 text-sky-400"></i>
-                    Thiết lập Thông tin & Dán Link Thực Thi
+    <!-- Modal Cài đặt (Được làm sáng màu) -->
+    <div id="edit-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md hidden items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full p-6 md:p-8 shadow-2xl my-8">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+                <h3 class="text-xl font-extrabold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="link" class="w-6 h-6 text-indigo-500"></i>
+                    Thiết lập Nội dung & Dán Link
                 </h3>
-                <button onclick="toggleEditModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
-                    <i data-lucide="x" class="w-6 h-6"></i>
+                <button onclick="toggleEditModal()" class="text-slate-400 hover:text-rose-500 bg-slate-100 hover:bg-rose-50 p-1.5 rounded-full transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <div class="space-y-4 max-h-[65vh] overflow-y-auto pr-2">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+            <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                <!-- Vùng Quản lý File cấu hình -->
+                <div class="flex flex-col sm:flex-row items-center justify-between bg-indigo-50 border border-indigo-100 p-4 rounded-2xl gap-3">
+                    <div class="text-sm">
+                        <p class="font-bold text-indigo-800">Quản lý file cấu hình</p>
+                        <p class="text-indigo-600 text-xs mt-0.5">Tải file về để mang sang máy tính khác trên lớp trình chiếu</p>
+                    </div>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="exportConfig()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 bg-white border border-indigo-200 text-indigo-700 px-3 py-2 rounded-xl text-sm font-bold hover:bg-indigo-100 transition shadow-sm">
+                            <i data-lucide="download" class="w-4 h-4"></i> Tải File về máy
+                        </button>
+                        <label class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl text-sm font-bold transition shadow-sm cursor-pointer">
+                            <i data-lucide="upload" class="w-4 h-4"></i> Nhập File lên
+                            <input type="file" id="import-file" accept=".json" class="hidden" onchange="importConfig(event)">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-sky-400 uppercase mb-1">Tên đơn vị / Sự kiện</label>
-                        <input type="text" id="input-school" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-sky-600 uppercase mb-1.5">Tên đơn vị / Sự kiện</label>
+                        <input type="text" id="input-school" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all font-medium">
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-sky-400 uppercase mb-1">Tên bài dạy / Chủ đề</label>
-                        <input type="text" id="input-lesson" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-sky-600 uppercase mb-1.5">Tên bài dạy / Chủ đề</label>
+                        <input type="text" id="input-lesson" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all font-medium">
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-sky-400 uppercase mb-1">Thông tin giáo viên & Lớp</label>
-                        <input type="text" id="input-teacher" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-sky-500 focus:outline-none">
+                        <label class="block text-xs font-bold text-sky-600 uppercase mb-1.5">Thông tin giáo viên & Lớp</label>
+                        <input type="text" id="input-teacher" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all font-medium">
                     </div>
                 </div>
 
                 <div id="edit-items-list" class="space-y-4"></div>
             </div>
 
-            <div class="flex justify-end gap-3 border-t border-slate-800 pt-5 mt-6">
-                <button onclick="toggleEditModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition cursor-pointer">Hủy</button>
-                <button onclick="saveChanges()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg flex items-center gap-2 transition cursor-pointer">
+            <div class="flex justify-end gap-3 border-t border-slate-100 pt-5 mt-6">
+                <button onclick="toggleEditModal()" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold transition cursor-pointer">Đóng</button>
+                <!-- Nút Lưu vào LocalStorage -->
+                <button onclick="saveChanges()" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold shadow-lg shadow-emerald-200 flex items-center gap-2 transition-all hover:-translate-y-0.5 cursor-pointer">
                     <i data-lucide="save" class="w-5 h-5"></i>
-                    Lưu & Áp dụng ngay
+                    Lưu Cấu Hình Trình Duyệt
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // ==========================================
-        // 1. MODULE BẢO VỆ CHỐNG SAO CHÉP & XEM SOURCE
-        // ==========================================
+        // Module Bảo vệ
         let toastTimeout;
         function showProtectAlert() {
             const toast = document.getElementById('protect-toast');
             toast.classList.remove('translate-y-24', 'opacity-0');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 2500);
+            toastTimeout = setTimeout(() => { toast.classList.add('translate-y-24', 'opacity-0'); }, 2500);
         }
 
-        // Chặn menu chuột phải
-        document.addEventListener('contextmenu', function(e) {
-            // Vẫn cho phép chuột phải để dán link trong ô input
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            e.preventDefault();
-            showProtectAlert();
-        });
+        document.addEventListener('contextmenu', e => { if (!['INPUT', 'TEXTAREA'].includes(e.target.tagName)) { e.preventDefault(); showProtectAlert(); }});
+        document.addEventListener('copy', e => { if (!['INPUT', 'TEXTAREA'].includes(e.target.tagName)) { e.preventDefault(); showProtectAlert(); }});
+        document.addEventListener('cut', e => { if (!['INPUT', 'TEXTAREA'].includes(e.target.tagName)) { e.preventDefault(); showProtectAlert(); }});
+        
+        document.addEventListener('keydown', e => {
+            const isInput = ['INPUT', 'TEXTAREA'].includes(e.target.tagName);
+            if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); showProtectAlert(); return false; }
+            if (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key)) { e.preventDefault(); showProtectAlert(); return false; }
+            if (e.ctrlKey && ['U', 'u', 'S', 's', 'P', 'p'].includes(e.key)) { e.preventDefault(); showProtectAlert(); return false; }
+            if (!isInput && e.ctrlKey && ['C', 'c', 'A', 'a', 'X', 'x'].includes(e.key)) { e.preventDefault(); showProtectAlert(); return false; }
 
-        // Chặn sự kiện Copy / Cut
-        document.addEventListener('copy', function(e) {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            e.preventDefault();
-            showProtectAlert();
-        });
-        document.addEventListener('cut', function(e) {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            e.preventDefault();
-            showProtectAlert();
-        });
-
-        // Chặn các phím tắt DevTools, View Source, Save Page, Copy
-        document.addEventListener('keydown', function(e) {
-            const isInput = (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA');
-
-            // Chặn F12
-            if (e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-                showProtectAlert();
-                return false;
-            }
-
-            // Chặn Ctrl + Shift + I / J / C (Mở Inspect / Console)
-            if (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key)) {
-                e.preventDefault();
-                showProtectAlert();
-                return false;
-            }
-
-            // Chặn Ctrl + U (Xem mã nguồn trang), Ctrl + S (Lưu trang web về máy), Ctrl + P (In trang)
-            if (e.ctrlKey && ['U', 'u', 'S', 's', 'P', 'p'].includes(e.key)) {
-                e.preventDefault();
-                showProtectAlert();
-                return false;
-            }
-
-            // Chặn Ctrl + C / Ctrl + A ngoài vùng nhập liệu
-            if (!isInput && e.ctrlKey && ['C', 'c', 'A', 'a', 'X', 'x'].includes(e.key)) {
-                e.preventDefault();
-                showProtectAlert();
-                return false;
-            }
-
-            // Hỗ trợ phím tắt 1 -> 6 mở nhanh hoạt động (khi không mở bảng cài đặt)
+            // Phím tắt mở thẻ (1-6)
             if (!isInput && !document.getElementById('edit-modal').classList.contains('flex')) {
                 const num = parseInt(e.key);
-                if (num >= 1 && num <= appData.items.length) {
-                    const targetItem = appData.items[num - 1];
-                    if (targetItem && targetItem.url) {
-                        executeLink(targetItem.url);
-                    }
+                if (num >= 1 && num <= appData.items.length && appData.items[num-1].url) {
+                    executeLink(appData.items[num-1].url);
                 }
             }
         });
 
-        // ==========================================
-        // 2. DỮ LIỆU & LOGIC MENU BÀI GIẢNG
-        // ==========================================
+        // Dữ liệu mặc định
         const defaultData = {
             school: "TRƯỜNG THPT NGUYỄN THÁI BÌNH • HỘI GIẢNG GIÁO VIÊN GIỎI",
             lesson: "BÀI TOÁN QUY HOẠCH TUYẾN TÍNH & ỨNG DỤNG THỰC TIỄN",
             teacher: "Giáo viên thực hiện: Thầy Mai Đức Thắng • Lớp: 11B2",
             items: [
-                {
-                    id: 1,
-                    tag: "HOẠT ĐỘNG 1 • KHỞI ĐỘNG",
-                    title: "Trò chơi tương tác: Thử thách tư duy",
-                    desc: "Khởi động nhanh kiến thức nền tảng qua hệ thống câu hỏi trắc nghiệm trực tuyến.",
-                    url: "https://quizizz.com",
-                    icon: "zap",
-                    color: "amber"
-                },
-                {
-                    id: 2,
-                    tag: "HOẠT ĐỘNG 2 • KHÁM PHÁ",
-                    title: "Mô phỏng trực quan miền nghiệm (GeoGebra / Web App)",
-                    desc: "Trực quan hóa hệ bất phương trình bậc nhất hai ẩn và tìm tọa độ các đỉnh.",
-                    url: "https://www.geogebra.org/graphing",
-                    icon: "compass",
-                    color: "sky"
-                },
-                {
-                    id: 3,
-                    tag: "HOẠT ĐỘNG 3 • LUYỆN TẬP",
-                    title: "Công cụ giải bài toán Quy hoạch tuyến tính",
-                    desc: "Chạy thanh trượt hàm mục tiêu F(x;y) để tìm giá trị lớn nhất, nhỏ nhất.",
-                    url: "",
-                    icon: "sliders",
-                    color: "emerald"
-                },
-                {
-                    id: 4,
-                    tag: "HOẠT ĐỘNG 4 • THẢO LUẬN NHÓM",
-                    title: "Phiếu học tập & Bảng nộp bài nhóm",
-                    desc: "Học sinh quét mã QR thảo luận tình huống kinh tế và nộp sản phẩm lên bảng chung.",
-                    url: "https://padlet.com",
-                    icon: "users",
-                    color: "purple"
-                },
-                {
-                    id: 5,
-                    tag: "HOẠT ĐỘNG 5 • VẬN DỤNG",
-                    title: "Bài toán tối ưu hóa chi phí sản xuất",
-                    desc: "Giải quyết tình huống thực tế của doanh nghiệp và xuất báo cáo kết quả.",
-                    url: "",
-                    icon: "briefcase",
-                    color: "rose"
-                },
-                {
-                    id: 6,
-                    tag: "HOẠT ĐỘNG 6 • ĐÁNH GIÁ",
-                    title: "Phiếu khảo sát & Đánh giá cuối tiết",
-                    desc: "Thu thập phản hồi nhanh mức độ hiểu bài của học sinh qua Google Forms.",
-                    url: "https://docs.google.com/forms",
-                    icon: "check-circle-2",
-                    color: "indigo"
-                }
+                { id: 1, tag: "HOẠT ĐỘNG 1 • KHỞI ĐỘNG", title: "Trò chơi tương tác: Thử thách tư duy", desc: "Khởi động nhanh kiến thức nền tảng qua hệ thống câu hỏi trắc nghiệm.", url: "https://quizizz.com", icon: "zap", color: "amber" },
+                { id: 2, tag: "HOẠT ĐỘNG 2 • KHÁM PHÁ", title: "Mô phỏng trực quan miền nghiệm", desc: "Trực quan hóa hệ bất phương trình bậc nhất hai ẩn.", url: "https://www.geogebra.org/graphing", icon: "compass", color: "sky" },
+                { id: 3, tag: "HOẠT ĐỘNG 3 • LUYỆN TẬP", title: "Công cụ giải Quy hoạch tuyến tính", desc: "Chạy thanh trượt hàm mục tiêu F(x;y) để tìm giá trị tối ưu.", url: "", icon: "sliders", color: "emerald" },
+                { id: 4, tag: "HOẠT ĐỘNG 4 • THẢO LUẬN", title: "Phiếu học tập & Bảng nộp bài", desc: "Học sinh quét mã QR thảo luận tình huống kinh tế.", url: "https://padlet.com", icon: "users", color: "purple" },
+                { id: 5, tag: "HOẠT ĐỘNG 5 • VẬN DỤNG", title: "Bài toán tối ưu hóa chi phí", desc: "Giải quyết tình huống thực tế của doanh nghiệp.", url: "", icon: "briefcase", color: "rose" },
+                { id: 6, tag: "HOẠT ĐỘNG 6 • ĐÁNH GIÁ", title: "Phiếu khảo sát & Đánh giá", desc: "Thu thập phản hồi nhanh mức độ hiểu bài của học sinh.", url: "https://docs.google.com/forms", icon: "check-circle-2", color: "indigo" }
             ]
         };
 
+        // Bảng màu sáng (Pastel)
         const colorStyles = {
-            amber:   { bg: "bg-amber-500/15", text: "text-amber-400", border: "border-amber-500/30", btn: "bg-amber-500 hover:bg-amber-400 text-slate-950" },
-            sky:     { bg: "bg-sky-500/15", text: "text-sky-400", border: "border-sky-500/30", btn: "bg-sky-500 hover:bg-sky-400 text-slate-950" },
-            emerald: { bg: "bg-emerald-500/15", text: "text-emerald-400", border: "border-emerald-500/30", btn: "bg-emerald-500 hover:bg-emerald-400 text-slate-950" },
-            purple:  { bg: "bg-purple-500/15", text: "text-purple-400", border: "border-purple-500/30", btn: "bg-purple-500 hover:bg-purple-400 text-white" },
-            rose:    { bg: "bg-rose-500/15", text: "text-rose-400", border: "border-rose-500/30", btn: "bg-rose-500 hover:bg-rose-400 text-white" },
-            indigo:  { bg: "bg-indigo-500/15", text: "text-indigo-400", border: "border-indigo-500/30", btn: "bg-indigo-500 hover:bg-indigo-400 text-white" }
+            amber:   { bg: "bg-amber-100", text: "text-amber-700", border: "border-amber-200", btn: "bg-amber-500 hover:bg-amber-400 text-white" },
+            sky:     { bg: "bg-sky-100", text: "text-sky-700", border: "border-sky-200", btn: "bg-sky-500 hover:bg-sky-400 text-white" },
+            emerald: { bg: "bg-emerald-100", text: "text-emerald-700", border: "border-emerald-200", btn: "bg-emerald-500 hover:bg-emerald-400 text-white" },
+            purple:  { bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200", btn: "bg-purple-500 hover:bg-purple-400 text-white" },
+            rose:    { bg: "bg-rose-100", text: "text-rose-700", border: "border-rose-200", btn: "bg-rose-500 hover:bg-rose-400 text-white" },
+            indigo:  { bg: "bg-indigo-100", text: "text-indigo-700", border: "border-indigo-200", btn: "bg-indigo-500 hover:bg-indigo-400 text-white" }
         };
 
         let appData = JSON.parse(localStorage.getItem('lessonMenuData')) || defaultData;
@@ -323,120 +250,154 @@
                 const hasLink = item.url && item.url.trim() !== '';
 
                 const card = document.createElement('div');
-                card.className = `glass-card rounded-2xl p-6 flex flex-col justify-between relative group ${hasLink ? 'cursor-pointer' : 'opacity-80'}`;
-                
-                if (hasLink) {
-                    card.onclick = () => executeLink(item.url);
-                }
+                card.className = `glass-card rounded-3xl p-6 flex flex-col justify-between relative group ${hasLink ? 'cursor-pointer' : 'opacity-90 grayscale-[0.2]'}`;
+                if (hasLink) card.onclick = () => executeLink(item.url);
 
                 card.innerHTML = `
                     <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="px-3 py-1 rounded-lg text-xs font-bold tracking-wide ${style.bg} ${style.text} border ${style.border}">
+                        <div class="flex justify-between items-start mb-5">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-extrabold tracking-wide ${style.bg} ${style.text} border ${style.border}">
                                 ${item.tag}
                             </span>
-                            <div class="w-10 h-10 rounded-xl ${style.bg} ${style.text} flex items-center justify-center font-bold text-lg">
+                            <div class="w-11 h-11 rounded-2xl ${style.bg} ${style.text} flex items-center justify-center font-bold text-lg shadow-sm border ${style.border}">
                                 <i data-lucide="${item.icon || 'play'}" class="w-5 h-5"></i>
                             </div>
                         </div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-sky-300 transition mb-2 leading-snug">
+                        <h3 class="text-xl font-extrabold text-slate-800 group-hover:text-indigo-600 transition-colors mb-2 leading-snug">
                             ${item.title}
                         </h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 font-medium">
                             ${item.desc}
                         </p>
                     </div>
-
-                    <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                        <span class="text-xs font-mono text-slate-400">Phím tắt: [${index + 1}]</span>
+                    <div class="pt-4 border-t border-slate-200/80 flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400">Phím tắt: [${index + 1}]</span>
                         ${hasLink 
-                            ? `<span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold ${style.btn} shadow-md transition">
-                                 Thực thi ngay <i data-lucide="external-link" class="w-4 h-4"></i>
+                            ? `<span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold ${style.btn} shadow-md transition-transform group-hover:scale-105">
+                                 Mở ngay <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                </span>`
-                            : `<span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-800/80 px-3 py-1.5 rounded-lg">
-                                 Chưa gắn link (Bấm Cài đặt)
+                            : `<span class="inline-flex items-center gap-1 text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                                 Chưa dán Link
                                </span>`
                         }
                     </div>
                 `;
                 container.appendChild(card);
             });
-
             lucide.createIcons();
         }
 
         function executeLink(url) {
             let formattedUrl = url.trim();
-            if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://') && !formattedUrl.startsWith('file://')) {
-                formattedUrl = 'https://' + formattedUrl;
-            }
+            if (!/^https?:\/\//i.test(formattedUrl) && !/^file:\/\//i.test(formattedUrl)) formattedUrl = 'https://' + formattedUrl;
             window.open(formattedUrl, '_blank', 'noopener,noreferrer');
         }
 
         function toggleEditModal() {
             const modal = document.getElementById('edit-modal');
-            const isHidden = modal.classList.contains('hidden');
-            
-            if (isHidden) {
+            if (modal.classList.contains('hidden')) {
                 document.getElementById('input-school').value = appData.school;
                 document.getElementById('input-lesson').value = appData.lesson;
                 document.getElementById('input-teacher').value = appData.teacher;
-
                 const list = document.getElementById('edit-items-list');
                 list.innerHTML = '';
-
                 appData.items.forEach((item, idx) => {
                     list.innerHTML += `
-                        <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-xl space-y-3">
+                        <div class="bg-white border border-slate-200 p-4 rounded-2xl space-y-3 shadow-sm">
                             <div class="flex items-center justify-between">
-                                <span class="text-sm font-bold text-sky-400">Thẻ số ${idx + 1}</span>
-                                <input type="text" id="tag-${idx}" value="${item.tag}" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1 text-xs text-slate-200 w-48">
+                                <span class="text-sm font-extrabold text-indigo-500 bg-indigo-50 px-2 py-1 rounded-md">Thẻ số ${idx + 1}</span>
+                                <input type="text" id="tag-${idx}" value="${item.tag}" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-700 w-48 font-bold outline-none focus:border-indigo-400">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-xs text-slate-400 mb-1">Tiêu đề hoạt động</label>
-                                    <input type="text" id="title-${idx}" value="${item.title}" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-white">
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Tiêu đề</label>
+                                    <input type="text" id="title-${idx}" value="${item.title}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 font-semibold outline-none focus:border-indigo-400">
                                 </div>
                                 <div>
-                                    <label class="block text-xs text-emerald-400 font-semibold mb-1">Đường link thực thi (URL)</label>
-                                    <input type="text" id="url-${idx}" value="${item.url}" placeholder="Dán link https://... vào đây" class="w-full bg-slate-950 border border-emerald-500/50 rounded-lg px-3 py-1.5 text-sm text-emerald-300 focus:outline-none focus:border-emerald-400">
+                                    <label class="block text-xs font-bold text-emerald-600 mb-1">URL Web App / Link thực thi</label>
+                                    <input type="text" id="url-${idx}" value="${item.url}" placeholder="Dán link https://..." class="w-full bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 text-sm text-emerald-800 font-semibold outline-none focus:border-emerald-400">
                                 </div>
                                 <div class="md:col-span-2">
-                                    <label class="block text-xs text-slate-400 mb-1">Mô tả ngắn</label>
-                                    <input type="text" id="desc-${idx}" value="${item.desc}" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-300">
+                                    <label class="block text-xs font-bold text-slate-500 mb-1">Mô tả chi tiết</label>
+                                    <input type="text" id="desc-${idx}" value="${item.desc}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700 font-medium outline-none focus:border-indigo-400">
                                 </div>
                             </div>
                         </div>
                     `;
                 });
-
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                modal.classList.remove('hidden'); modal.classList.add('flex');
             } else {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
+                modal.classList.add('hidden'); modal.classList.remove('flex');
             }
         }
 
+        // Lưu vào LocalStorage
         function saveChanges() {
             appData.school = document.getElementById('input-school').value;
             appData.lesson = document.getElementById('input-lesson').value;
             appData.teacher = document.getElementById('input-teacher').value;
-
             appData.items.forEach((item, idx) => {
                 item.tag = document.getElementById(`tag-${idx}`).value;
                 item.title = document.getElementById(`title-${idx}`).value;
                 item.url = document.getElementById(`url-${idx}`).value;
                 item.desc = document.getElementById(`desc-${idx}`).value;
             });
-
             localStorage.setItem('lessonMenuData', JSON.stringify(appData));
             renderUI();
             toggleEditModal();
+            alert("Đã lưu cấu hình vào trình duyệt máy tính này!");
+        }
+
+        // Xuất file JSON
+        function exportConfig() {
+            // Lấy dữ liệu mới nhất từ các ô input
+            const exportData = JSON.parse(JSON.stringify(appData));
+            exportData.school = document.getElementById('input-school').value;
+            exportData.lesson = document.getElementById('input-lesson').value;
+            exportData.teacher = document.getElementById('input-teacher').value;
+            exportData.items.forEach((item, idx) => {
+                item.tag = document.getElementById(`tag-${idx}`).value;
+                item.title = document.getElementById(`title-${idx}`).value;
+                item.url = document.getElementById(`url-${idx}`).value;
+                item.desc = document.getElementById(`desc-${idx}`).value;
+            });
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "cauhinh_menuthaogiang.json");
+            document.body.appendChild(downloadAnchorNode); 
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        // Nhập file JSON
+        function importConfig(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (importedData && importedData.items) {
+                        appData = importedData;
+                        localStorage.setItem('lessonMenuData', JSON.stringify(appData));
+                        renderUI();
+                        toggleEditModal();
+                        alert("Đã tải cấu hình thành công!");
+                    } else {
+                        alert("File cấu hình không hợp lệ!");
+                    }
+                } catch (err) {
+                    alert("Lỗi khi đọc file cấu hình.");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ""; // Reset input
         }
 
         function resetDefaultData() {
-            if (confirm("Bạn có chắc muốn khôi phục lại nội dung mẫu ban đầu không?")) {
+            if (confirm("Khôi phục lại nội dung mẫu ban đầu?")) {
                 localStorage.removeItem('lessonMenuData');
                 appData = JSON.parse(JSON.stringify(defaultData));
                 renderUI();
@@ -445,18 +406,10 @@
 
         function updateSystemDateTime() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('live-clock').innerText = `${hours}:${minutes}:${seconds}`;
-
-            const daysOfWeek = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-            const dayName = daysOfWeek[now.getDay()];
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const year = now.getFullYear();
-            
-            document.getElementById('live-date').innerText = `${dayName}, ${day}/${month}/${year}`;
+            const pad = num => String(num).padStart(2, '0');
+            document.getElementById('live-clock').innerText = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            document.getElementById('live-date').innerText = `${days[now.getDay()]}, ${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`;
         }
 
         setInterval(updateSystemDateTime, 1000);
